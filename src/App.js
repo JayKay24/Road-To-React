@@ -1,37 +1,39 @@
 import * as React from 'react';
 
-const list = [
-  {
-    title: 'React',
-    url: 'http://reactjs.org/',
-    author: 'Jordan Walke',
-    num_comments: 3,
-    points: 4,
-    objectID: 0,
-  },
-  {
-    title: 'Redux',
-    url: 'https://redux.js.org/',
-    author: 'Dan Abramov, Andrew Clark',
-    num_comments: 2,
-    points: 5,
-    objectID: 1,
-  },
-];
+const App = () => {
+  const stories = [
+    {
+      title: 'React',
+      url: 'http://reactjs.org/',
+      author: 'Jordan Walke',
+      num_comments: 3,
+      points: 4,
+      objectID: 0,
+    },
+    {
+      title: 'Redux',
+      url: 'https://redux.js.org/',
+      author: 'Dan Abramov, Andrew Clark',
+      num_comments: 2,
+      points: 5,
+      objectID: 1,
+    },
+  ];
 
-const App = () => (
-  <div>
-    <h1>My Hacker stories</h1>
+  return (
+    <div>
+      <h1>My Hacker stories</h1>
 
-    <Search />
+      <Search />
 
-    <hr />
+      <hr />
 
-    <List />
-  </div>
-);
+      <List list={stories} />
+    </div>
+  );
+};
 
-const List = () => (
+const List = ({ list }) => (
   <ul>
     {list.map((item) => (
       <li key={item.objectID}>
