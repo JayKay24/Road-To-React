@@ -27,7 +27,7 @@ module.exports = {
     radix: 'error',
     'space-before-blocks': 'error',
     'import/prefer-default-export': 'off',
-    'react/prop-types': 1,
+    'react/prop-types': 0,
   },
   overrides: [
     {
