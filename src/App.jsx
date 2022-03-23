@@ -1,4 +1,5 @@
 import React, { useEffect, useReducer, useCallback, useState } from 'react';
+import axios from 'axios';
 
 import { useSemiPersistentState } from './hooks/useSemiPersistentState';
 
@@ -21,8 +22,9 @@ const App = () => {
   const handleFetchStories = useCallback(async () => {
     dispatchStories({ type: STORIES_ACTIONS.STORIES_FETCH_INIT });
     try {
-      const response = await fetch(url);
-      const { hits } = await response.json();
+      const {
+        data: { hits },
+      } = await axios.get(url);
 
       dispatchStories({ type: STORIES_ACTIONS.STORIES_FETCH_SUCCESS, payload: hits });
     } catch (error) {
