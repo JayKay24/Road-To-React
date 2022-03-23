@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useReducer } from 'react';
+import { STORIES_ACTIONS } from './actions';
 
 const initialStories = [
   {
@@ -30,10 +31,11 @@ const useSemiPersistentState = (key, initialState) => {
 };
 
 const storiesReducer = (state, action) => {
+  const { SET_STORIES, REMOVE_STORY } = STORIES_ACTIONS;
   switch (action.type) {
-    case 'SET_STORIES':
+    case SET_STORIES:
       return action.payload;
-    case 'REMOVE_STORY': {
+    case REMOVE_STORY: {
       const {
         payload: { objectID },
       } = action;
@@ -71,7 +73,7 @@ const App = () => {
         const {
           data: { stories },
         } = await getAsyncStories();
-        dispatchStories({ type: 'SET_STORIES', payload: stories });
+        dispatchStories({ type: STORIES_ACTIONS.SET_STORIES, payload: stories });
       } catch (error) {
         setIsError(true);
       } finally {
@@ -83,7 +85,7 @@ const App = () => {
   }, []);
 
   const handleRemoveStory = (item) => {
-    dispatchStories({ type: 'REMOVE_STORY', payload: item });
+    dispatchStories({ type: STORIES_ACTIONS.REMOVE_STORY, payload: item });
   };
 
   const handleSearch = (event) => {
