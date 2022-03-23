@@ -28,10 +28,44 @@ const initialStories = [
     objectID: 1,
   },
 ];
+
+const getAsyncStories = () =>
+  new Promise((resolve) => {
+    setTimeout(
+      () =>
+        resolve({
+          data: {
+            stories: initialStories,
+          },
+        }),
+      2000,
+    );
+  });
+
 const App = () => {
-  const [stories, setStories] = useState(initialStories);
+  const [stories, setStories] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const [searchTerm, setSearchTerm] = useSemiPersistentState('search', 'React');
+
+  useEffect(() => {
+    async function fetchStories() {
+      setIsLoading(true);
+      try {
+        const {
+          data: { stories },
+        } = await getAsyncStories();
+        setStories(stories);
+      } catch (error) {
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchStories();
+  }, []);
 
   const handleRemoveStory = (item) => {
     const newStories = stories.filter((story) => story.objectID !== item.objectID);
@@ -57,7 +91,13 @@ const App = () => {
 
       <hr />
 
-      <List list={searchedStories} onRemoveItem={handleRemoveStory} />
+      {isError && <p>Something went wrong...</p>}
+
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <List list={searchedStories} onRemoveItem={handleRemoveStory} />
+      )}
     </div>
   );
 };
