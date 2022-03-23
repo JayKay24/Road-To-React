@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useCallback } from 'react';
 
 import { useSemiPersistentState } from './hooks/useSemiPersistentState';
 
@@ -16,23 +16,22 @@ const App = () => {
 
   const [searchTerm, setSearchTerm] = useSemiPersistentState('search', 'React');
 
-  useEffect(() => {
+  const handleFetchStories = useCallback(async () => {
     if (!searchTerm) return;
+    dispatchStories({ type: STORIES_ACTIONS.STORIES_FETCH_INIT });
+    try {
+      const response = await fetch(`${API_ENDPOINT}${searchTerm}`);
+      const { hits } = await response.json();
 
-    async function fetchStories() {
-      dispatchStories({ type: STORIES_ACTIONS.STORIES_FETCH_INIT });
-      try {
-        const response = await fetch(`${API_ENDPOINT}${searchTerm}`);
-        const { hits } = await response.json();
-
-        dispatchStories({ type: STORIES_ACTIONS.STORIES_FETCH_SUCCESS, payload: hits });
-      } catch (error) {
-        dispatchStories({ type: STORIES_ACTIONS.STORIES_FETCH_FAILURE });
-      }
+      dispatchStories({ type: STORIES_ACTIONS.STORIES_FETCH_SUCCESS, payload: hits });
+    } catch (error) {
+      dispatchStories({ type: STORIES_ACTIONS.STORIES_FETCH_FAILURE });
     }
-
-    fetchStories();
   }, [searchTerm]);
+
+  useEffect(() => {
+    handleFetchStories();
+  }, [handleFetchStories]);
 
   const handleRemoveStory = (item) => {
     dispatchStories({ type: STORIES_ACTIONS.REMOVE_STORY, payload: item });
