@@ -1,14 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
-
-const useSemiPersistentState = (key, initialState) => {
-  const [value, setValue] = useState(localStorage.getItem(key) || initialState);
-
-  useEffect(() => {
-    localStorage.setItem(key, value);
-  }, [value, key]);
-
-  return [value, setValue];
-};
+import React, { useState, useEffect, useRef, useReducer } from 'react';
 
 const initialStories = [
   {
@@ -29,6 +19,31 @@ const initialStories = [
   },
 ];
 
+const useSemiPersistentState = (key, initialState) => {
+  const [value, setValue] = useState(localStorage.getItem(key) || initialState);
+
+  useEffect(() => {
+    localStorage.setItem(key, value);
+  }, [value, key]);
+
+  return [value, setValue];
+};
+
+const storiesReducer = (state, action) => {
+  switch (action.type) {
+    case 'SET_STORIES':
+      return action.payload;
+    case 'REMOVE_STORY': {
+      const {
+        payload: { objectID },
+      } = action;
+      return state.filter((story) => story.objectID !== objectID);
+    }
+    default:
+      throw new Error();
+  }
+};
+
 const getAsyncStories = () =>
   new Promise((resolve) => {
     setTimeout(
@@ -43,7 +58,7 @@ const getAsyncStories = () =>
   });
 
 const App = () => {
-  const [stories, setStories] = useState([]);
+  const [stories, dispatchStories] = useReducer(storiesReducer, []);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
@@ -56,7 +71,7 @@ const App = () => {
         const {
           data: { stories },
         } = await getAsyncStories();
-        setStories(stories);
+        dispatchStories({ type: 'SET_STORIES', payload: stories });
       } catch (error) {
         setIsError(true);
       } finally {
@@ -68,9 +83,7 @@ const App = () => {
   }, []);
 
   const handleRemoveStory = (item) => {
-    const newStories = stories.filter((story) => story.objectID !== item.objectID);
-
-    setStories(newStories);
+    dispatchStories({ type: 'REMOVE_STORY', payload: item });
   };
 
   const handleSearch = (event) => {
