@@ -4,11 +4,12 @@ import { useSemiPersistentState } from './hooks/useSemiPersistentState';
 
 import { STORIES_ACTIONS } from './store/actions';
 import { storiesReducer } from './store/reducers';
-import { getAsyncStories } from './store/stories';
 import { initialState } from './store/initialState';
 
 import { InputWithLabel } from './components/InputWithLabel';
 import { List } from './components/List';
+
+const API_ENDPOINT = 'https://hn.algolia.com/api/v1/search?query=';
 
 const App = () => {
   const [stories, dispatchStories] = useReducer(storiesReducer, initialState);
@@ -19,10 +20,10 @@ const App = () => {
     async function fetchStories() {
       dispatchStories({ type: STORIES_ACTIONS.STORIES_FETCH_INIT });
       try {
-        const {
-          data: { stories },
-        } = await getAsyncStories();
-        dispatchStories({ type: STORIES_ACTIONS.STORIES_FETCH_SUCCESS, payload: stories });
+        const response = await fetch(`${API_ENDPOINT}react`);
+        const { hits } = await response.json();
+
+        dispatchStories({ type: STORIES_ACTIONS.STORIES_FETCH_SUCCESS, payload: hits });
       } catch (error) {
         dispatchStories({ type: STORIES_ACTIONS.STORIES_FETCH_FAILURE });
       }
