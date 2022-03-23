@@ -5,16 +5,13 @@ import { useSemiPersistentState } from './hooks/useSemiPersistentState';
 import { STORIES_ACTIONS } from './store/actions';
 import { storiesReducer } from './store/reducers';
 import { getAsyncStories } from './store/stories';
+import { initialState } from './store/initialState';
 
 import { InputWithLabel } from './components/InputWithLabel';
 import { List } from './components/List';
 
 const App = () => {
-  const [stories, dispatchStories] = useReducer(storiesReducer, {
-    data: [],
-    isLoading: false,
-    isError: false,
-  });
+  const [stories, dispatchStories] = useReducer(storiesReducer, initialState);
 
   const [searchTerm, setSearchTerm] = useSemiPersistentState('search', 'React');
 
