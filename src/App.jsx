@@ -7,8 +7,8 @@ import { STORIES_ACTIONS } from './store/actions';
 import { storiesReducer } from './store/reducers';
 import { initialState } from './store/initialState';
 
-import { InputWithLabel } from './components/InputWithLabel';
 import { List } from './components/List';
+import { SearchForm } from './components/SearchForm';
 
 const API_ENDPOINT = 'https://hn.algolia.com/api/v1/search?query=';
 
@@ -44,21 +44,20 @@ const App = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleSearchSubmit = () => {
+  const handleSearchSubmit = (event) => {
     setUrl(`${API_ENDPOINT}${searchTerm}`);
+    event.preventDefault();
   };
 
   return (
     <div>
       <h1>My Hacker stories</h1>
 
-      <InputWithLabel value={searchTerm} onInputChange={handleSearchInput} id="search" isFocused>
-        <strong>Search:</strong>
-      </InputWithLabel>
-
-      <button type="button" disabled={!searchTerm} onClick={handleSearchSubmit}>
-        Submit
-      </button>
+      <SearchForm
+        searchTerm={searchTerm}
+        onSearchSubmit={handleSearchSubmit}
+        onSearchInput={handleSearchInput}
+      />
 
       <hr />
 
