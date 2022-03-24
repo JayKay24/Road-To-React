@@ -1,5 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 
+import { StyledLabel } from './styled/StyledLabel';
+import { StyledInput } from './styled/StyledInput';
+
 export const InputWithLabel = ({
   value,
   onInputChange,
@@ -18,9 +21,9 @@ export const InputWithLabel = ({
 
   return (
     <>
-      <label htmlFor={id}>{children}</label>
+      <StyledLabel htmlFor={id}>{children}</StyledLabel>
       &nbsp;
-      <input id={id} type={type} onChange={onInputChange} value={value} ref={inputRef} />
+      <StyledInput id={id} type={type} onChange={onInputChange} value={value} ref={inputRef} />
     </>
   );
 };

@@ -10,6 +10,9 @@ import { initialState } from './store/initialState';
 import { List } from './components/List';
 import { SearchForm } from './components/SearchForm';
 
+import { StyledContainer } from './components/styled/StyledContainer';
+import { StyledHeadlinePrimary } from './components/styled/StyledHeadlinePrimary';
+
 const API_ENDPOINT = 'https://hn.algolia.com/api/v1/search?query=';
 
 const App = () => {
@@ -50,8 +53,8 @@ const App = () => {
   };
 
   return (
-    <div>
-      <h1>My Hacker stories</h1>
+    <StyledContainer>
+      <StyledHeadlinePrimary>My Hacker stories</StyledHeadlinePrimary>
 
       <SearchForm
         searchTerm={searchTerm}
@@ -68,7 +71,7 @@ const App = () => {
       ) : (
         <List list={stories.data} onRemoveItem={handleRemoveStory} />
       )}
-    </div>
+    </StyledContainer>
   );
 };
 

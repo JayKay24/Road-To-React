@@ -2,14 +2,17 @@ import React from 'react';
 
 import { InputWithLabel } from './InputWithLabel';
 
+import { StyledSearchForm } from './styled/StyledSearchForm';
+import { StyledButtonLarge } from './styled/StyledButtonLarge';
+
 export const SearchForm = ({ searchTerm, onSearchSubmit, onSearchInput }) => (
-  <form onSubmit={onSearchSubmit}>
+  <StyledSearchForm onSubmit={onSearchSubmit}>
     <InputWithLabel value={searchTerm} onInputChange={onSearchInput} id="search" isFocused>
       <strong>Search:</strong>
     </InputWithLabel>
 
-    <button type="submit" disabled={!searchTerm}>
+    <StyledButtonLarge type="submit" disabled={!searchTerm}>
       Submit
-    </button>
-  </form>
+    </StyledButtonLarge>
+  </StyledSearchForm>
 );
